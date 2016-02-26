@@ -9,10 +9,21 @@ RSpec.describe SpeciesController, type: :controller do
     end
   end
 
-  describe "GET #create" do
+  describe "POST #create" do
     it "returns http success" do
       post :create
-      expect(response).to have_http_status(:success)
+      expect(response).to have_http_status(:redirect)
+    end
+
+    it "creates a species" do
+      create_a_panda
+      expect(Species.first).to be_a(Species)
+      expect(Species.first.name).to eq("Panda")
+    end
+
+    it "redirect to the index" do
+      subject = create_a_panda
+      expect(subject).to redirect_to('/')
     end
   end
 
@@ -23,18 +34,22 @@ RSpec.describe SpeciesController, type: :controller do
     end
   end
 
-  describe "GET #destroy" do
+  describe "DELETE #destroy" do
     it "returns http success" do
       delete :destroy
       expect(response).to have_http_status(:success)
     end
   end
 
-  describe "GET #update" do
+  describe "PATCH #update" do
     it "returns http success" do
       patch :update
       expect(response).to have_http_status(:success)
     end
   end
 
+  def create_a_panda
+    expect(Species.first).to be(nil)
+    post :create, name: 'Panda'
+  end
 end
